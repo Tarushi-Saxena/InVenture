@@ -121,17 +121,22 @@ def show():
             
             burn = exp - rev
             st.metric("Monthly Burn Rate", f"₹{burn:,.2f}")
-            if burn > 0:
+            
+            if exp == 0 and rev == 0:
+                st.info("Enter your financial data above to generate your runtime projection.")
+            elif burn > 0:
                 runway = cash / burn
                 st.metric("Months of Runway", f"{runway:.1f}", delta="Warning: < 3 months!" if runway < 3 else None, delta_color="inverse" if runway < 3 else "normal")
             else:
-                st.success("You are profitable! Infinite runway.")
+                st.success(f"You generate ₹{abs(burn):,.2f} monthly profit! Infinite runway.")
 
         with col2:
             st.markdown("### Funding Required")
             desired_runway = st.number_input("Desired Runway (Months)", min_value=0, value=18)
-            if burn > 0:
+            if exp == 0 and rev == 0:
+                st.info("Awaiting structural data...")
+            elif burn > 0:
                 needed = burn * desired_runway
                 st.metric(f"Funding Need for {desired_runway}mo", f"₹{needed:,.2f}")
             else:
-                st.write("You don't need funding for operations!")
+                st.write("You don't need external funding to sustain operations.")
