@@ -6,7 +6,48 @@ st.set_page_config(page_title="InVenture", page_icon="🚀", layout="wide")
 
 st.markdown("""
     <style>
-        .block-container { padding-top: 2rem; }
+        /* Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+        
+        html, body, [class*="css"] {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .block-container { 
+            padding-top: 2rem; 
+            max-width: 1200px;
+        }
+        
+        /* Metric Cards */
+        [data-testid="stMetricValue"] {
+            font-weight: 800;
+            color: #4F46E5;
+        }
+        [data-testid="metric-container"] {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        /* Buttons */
+        .stButton>button {
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+        }
+        .stButton>button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            border-color: #4F46E5;
+        }
+        
+        /* Expanders (Startup Cards) */
+        .streamlit-expanderHeader {
+            font-weight: 600;
+            border-radius: 8px;
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -49,7 +90,7 @@ if not st.session_state['logged_in']:
             new_name = st.text_input("Full Name")
             new_email = st.text_input("Email")
             new_password = st.text_input("Password", type="password")
-            new_role = st.selectbox("I am a:", ["founder", "investor"], format_func=lambda x: "Founder" if x == "founder" else "Investor")
+            new_role = st.selectbox("I am a:", ["admin", "founder", "investor"], format_func=lambda x: x.capitalize())
             reg_submitted = st.form_submit_button("Register")
             
             if reg_submitted:
