@@ -94,14 +94,20 @@ def show():
                 if not s_name or not s_ind:
                     st.error("Name and Industry are required!")
                 else:
-                    res = execute_query(
-                        "INSERT INTO startups (name, industry, stage, description, funding_needed, founder_id) VALUES (%s, %s, %s, %s, %s, %s)",
-                        (s_name, s_ind, s_stage, s_desc, s_funding, founder_id),
-                        fetch="none"
-                    )
-                    if res is not None:
-                        st.success("Startup created successfully!")
-                        st.rerun()
+                    existing = execute_query("SELECT id FROM startups WHERE LOWER(name) = LOWER(%s)", (s_name,), fetch="one")
+                    if existing:
+                        st.error("A startup with this exact name already exists in the incubator!")
+                    else:
+                        res = execute_query(
+                            "INSERT INTO startups (name, industry, stage, description, funding_needed, founder_id) VALUES (%s, %s, %s, %s, %s, %s)",
+                            (s_name, s_ind, s_stage, s_desc, s_funding, founder_id),
+                            fetch="none"
+                        )
+                        if res is not None:
+                            import time
+                            st.success("Startup created successfully!")
+                            time.sleep(1.5)
+                            st.rerun()
 
     with tab3:
         st.subheader("🧮 Founder Calculators")
