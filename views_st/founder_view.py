@@ -119,24 +119,26 @@ def show():
             rev = st.number_input("Monthly Revenue (₹)", min_value=0, step=1000)
             exp = st.number_input("Monthly Expenses (₹)", min_value=0, step=1000)
             
-            burn = exp - rev
-            st.metric("Monthly Burn Rate", f"₹{burn:,.2f}")
-            
-            if exp == 0 and rev == 0:
+            if cash == 0 and rev == 0 and exp == 0:
                 st.info("Enter your financial data above to generate your runtime projection.")
-            elif burn > 0:
-                runway = cash / burn
-                st.metric("Months of Runway", f"{runway:.1f}", delta="Warning: < 3 months!" if runway < 3 else None, delta_color="inverse" if runway < 3 else "normal")
             else:
-                st.success(f"You generate ₹{abs(burn):,.2f} monthly profit! Infinite runway.")
+                burn = exp - rev
+                st.metric("Monthly Burn Rate", f"₹{burn:,.2f}")
+                
+                if burn > 0:
+                    runway = cash / burn
+                    st.metric("Months of Runway", f"{runway:.1f}", delta="Warning: < 3 months!" if runway < 3 else None, delta_color="inverse" if runway < 3 else "normal")
+                else:
+                    st.metric("Monthly Profit", f"₹{abs(burn):,.2f}", delta="Profitable", delta_color="normal")
 
         with col2:
             st.markdown("### Funding Required")
             desired_runway = st.number_input("Desired Runway (Months)", min_value=0, value=18)
-            if exp == 0 and rev == 0:
+            
+            if cash == 0 and rev == 0 and exp == 0:
                 st.info("Awaiting structural data...")
-            elif burn > 0:
-                needed = burn * desired_runway
+            elif (exp - rev) > 0:
+                needed = (exp - rev) * desired_runway
                 st.metric(f"Funding Need for {desired_runway}mo", f"₹{needed:,.2f}")
             else:
-                st.write("You don't need external funding to sustain operations.")
+                st.metric("External Funding Required", "₹0.00", delta="Fully self-sustained", delta_color="normal")
