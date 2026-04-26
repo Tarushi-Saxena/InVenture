@@ -11,6 +11,7 @@ def init_connection():
     # Streamlit Cloud mounts the Github repo as Read-Only. 
     # SQLite needs write access to the folder to create journal locks.
     target_db = DB_SOURCE
+    conn = sqlite3.connect(target_db, check_same_thread=False)
     
     try:
         # Streamlit Cloud uses read-only Docker mounts. CREATE TABLE IF NOT EXISTS 
