@@ -91,14 +91,17 @@ def show():
             s_funding = st.number_input("Funding Needed ($)", min_value=0, step=1000)
             
             if st.form_submit_button("Create Startup"):
-                execute_query(
-                    "INSERT INTO startups (name, industry, stage, description, funding_needed, founder_id) \
-                    VALUES (%s, %s, %s, %s, %s, %s)",
-                    (s_name, s_ind, s_stage, s_desc, s_funding, founder_id),
-                    fetch="none"
-                )
-                st.success("Startup created successfully!")
-                st.rerun()
+                if not s_name or not s_ind:
+                    st.error("Name and Industry are required!")
+                else:
+                    res = execute_query(
+                        "INSERT INTO startups (name, industry, stage, description, funding_needed, founder_id) VALUES (%s, %s, %s, %s, %s, %s)",
+                        (s_name, s_ind, s_stage, s_desc, s_funding, founder_id),
+                        fetch="none"
+                    )
+                    if res is not None:
+                        st.success("Startup created successfully!")
+                        st.rerun()
 
     with tab3:
         st.subheader("🧮 Founder Calculators")
