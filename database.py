@@ -1,13 +1,30 @@
 import sqlite3
 import streamlit as st
+import os
+import shutil
 
-DB_NAME = "incubator.db"
+DB_SOURCE = "incubator.db"
+DB_TMP = "/tmp/incubator_working.db"
 
 @st.cache_resource
 def init_connection():
-    # Detects if file exists; if not, we should probably run the seeder
-    # But connecting automatically creates the empty incubator.db file!
-    conn = sqlite3.connect(DB_NAME, check_same_thread=False)
+    # Streamlit Cloud mounts the Github repo as Read-Only. 
+    # SQLite needs write access to the folder to create journal locks.
+    target_db = DB_SOURCE
+    
+    try:
+        # Test if the directory is writable
+        test_file = ".test_write"
+        with open(test_file, "w") as f:
+            f.write("test")
+        os.remove(test_file)
+    except (IOError, PermissionError):
+        # We are in a read-only Docker container (Streamlit Cloud)
+        target_db = DB_TMP
+        if not os.path.exists(target_db):
+            shutil.copy(DB_SOURCE, target_db)
+            
+    conn = sqlite3.connect(target_db, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     return conn
 
