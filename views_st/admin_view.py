@@ -54,7 +54,7 @@ def show():
             for _, s in filtered_df.iterrows():
                 alert_icon = "⚠️ (AT RISK)" if s['is_at_risk'] else "✅"
                 with st.expander(f"{alert_icon} {s['name']}  —  {s['stage']}  ({s['progress']}%)"):
-                    st.write(f"**Industry:** {s['industry']}  |  **Funding Needed:** ${s['funding_needed']:,.2f}")
+                    st.write(f"**Industry:** {s['industry']}  |  **Funding Needed:** ₹{s['funding_needed']:,.2f}")
                     st.write(s['description'])
                     st.progress(int(s['progress']) / 100)
                     

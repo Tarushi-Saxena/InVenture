@@ -22,7 +22,7 @@ def show(startup_id):
     st.divider()
     st.subheader("About")
     st.write(startup['description'])
-    st.write(f"**Funding Needed:** ${startup['funding_needed']:,.2f}")
+    st.write(f"**Funding Needed:** ₹{startup['funding_needed']:,.2f}")
     
     colA, colB = st.columns(2)
     with colA:

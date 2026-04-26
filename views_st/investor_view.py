@@ -21,8 +21,8 @@ def show():
         with st.form("pref_form"):
             ind = st.text_input("Preferred Industry (or 'Any')", value=pref.get('industry', 'Any'))
             stage = st.selectbox("Preferred Stage", ["Idea", "MVP", "Funding"], index=["Idea", "MVP", "Funding"].index(pref.get('stage', 'Idea')))
-            min_inv = st.number_input("Min Required Capital allowed ($)", value=float(pref.get('min_investment', 0)), step=10000.0)
-            max_inv = st.number_input("Max Required Capital allowed ($)", value=float(pref.get('max_investment', 0)), step=10000.0)
+            min_inv = st.number_input("Min Required Capital allowed (₹)", value=float(pref.get('min_investment', 0)), step=10000.0)
+            max_inv = st.number_input("Max Required Capital allowed (₹)", value=float(pref.get('max_investment', 0)), step=10000.0)
             
             if st.form_submit_button("Save Strategy"):
                 existing = execute_query("SELECT id FROM investor_preferences WHERE investor_id = ?", (investor_id,), fetch="one")
@@ -84,7 +84,7 @@ def show():
                 c1, c2, c3 = st.columns(3)
                 c1.write(f"**Industry:** {m['industry']}")
                 c2.write(f"**Stage:** {m['stage']}")
-                c3.write(f"**Capital Needed:** ${m['funding_needed']:,.2f}")
+                c3.write(f"**Capital Needed:** ₹{m['funding_needed']:,.2f}")
                 
                 st.write(f"*{m['description']}*")
                 st.info(f"**Match Logic:** {m['match_reason']}")

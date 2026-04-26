@@ -88,7 +88,7 @@ def show():
             s_ind = st.text_input("Industry (e.g., EdTech, FinTech)")
             s_stage = st.selectbox("Current Stage", ["Idea", "MVP", "Funding"])
             s_desc = st.text_area("Description")
-            s_funding = st.number_input("Funding Needed ($)", min_value=0, step=1000)
+            s_funding = st.number_input("Funding Needed (₹)", min_value=0, step=1000)
             
             if st.form_submit_button("Create Startup"):
                 if not s_name or not s_ind:
@@ -115,12 +115,12 @@ def show():
         col1, col2 = st.columns(2)
         with col1:
             st.markdown("### Burn Rate & Runway")
-            cash = st.number_input("Current Cash ($)", min_value=0, step=1000)
-            rev = st.number_input("Monthly Revenue ($)", min_value=0, step=1000)
-            exp = st.number_input("Monthly Expenses ($)", min_value=0, step=1000)
+            cash = st.number_input("Current Cash (₹)", min_value=0, step=1000)
+            rev = st.number_input("Monthly Revenue (₹)", min_value=0, step=1000)
+            exp = st.number_input("Monthly Expenses (₹)", min_value=0, step=1000)
             
             burn = exp - rev
-            st.metric("Monthly Burn Rate", f"${burn:,.2f}")
+            st.metric("Monthly Burn Rate", f"₹{burn:,.2f}")
             if burn > 0:
                 runway = cash / burn
                 st.metric("Months of Runway", f"{runway:.1f}", delta="Warning: < 3 months!" if runway < 3 else None, delta_color="inverse" if runway < 3 else "normal")
@@ -132,6 +132,6 @@ def show():
             desired_runway = st.number_input("Desired Runway (Months)", min_value=0, value=18)
             if burn > 0:
                 needed = burn * desired_runway
-                st.metric(f"Funding Need for {desired_runway}mo", f"${needed:,.2f}")
+                st.metric(f"Funding Need for {desired_runway}mo", f"₹{needed:,.2f}")
             else:
                 st.write("You don't need funding for operations!")
