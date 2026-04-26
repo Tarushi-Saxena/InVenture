@@ -23,7 +23,7 @@ def show():
     from auth import require_auth
     require_auth(['founder'])
     
-    st.title("🚀 Founder Dashboard")
+    st.title("Founder Dashboard")
     founder_id = st.session_state['user']['id']
     
     tab1, tab2, tab3 = st.tabs(["My Startups", "Add New Startup", "Calculators"])
@@ -55,7 +55,7 @@ def show():
                     st.rerun()
                 
                 st.divider()
-                st.subheader("📚 Feedback Received")
+                st.subheader("Feedback Received")
                 feedbacks = execute_query(
                     "SELECT f.rating, f.category, f.comment, f.created_at, u.name as admin_name \
                     FROM feedback f JOIN users u ON f.admin_id = u.id WHERE f.startup_id = %s",
@@ -68,7 +68,7 @@ def show():
                     st.write("No feedback received yet.")
                 
                 st.divider()
-                st.subheader("📄 Documents")
+                st.subheader("Documents")
                 docs = execute_query("SELECT * FROM documents WHERE startup_id = %s", (startup_sel['id'],))
                 if docs:
                     for d in docs:
@@ -110,7 +110,7 @@ def show():
                             st.rerun()
 
     with tab3:
-        st.subheader("🧮 Founder Calculators")
+        st.subheader("Founder Calculators")
         
         col1, col2 = st.columns(2)
         with col1:

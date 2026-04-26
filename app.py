@@ -2,7 +2,7 @@ import streamlit as st
 from auth import login, logout
 from views_st import admin_view, founder_view, investor_view, startup_detail
 
-st.set_page_config(page_title="InVenture", page_icon="🚀", layout="wide")
+st.set_page_config(page_title="InVenture", layout="wide")
 
 st.markdown("""
     <style>
@@ -59,7 +59,7 @@ if 'user' not in st.session_state:
 
 # Routing
 if not st.session_state['logged_in']:
-    st.title("🚀 InVenture")
+    st.title("InVenture")
     st.subheader("Startup Incubator Management System")
     
     tab1, tab2 = st.tabs(["Login", "Register"])

@@ -6,7 +6,7 @@ def show():
     from auth import require_auth
     require_auth(['investor'])
     
-    st.title("💼 Investor Portal")
+    st.title("Investor Portal")
     investor_id = st.session_state['user']['id']
     
     # Get current preferences
@@ -14,7 +14,7 @@ def show():
     if not pref:
         pref = {'industry': 'Any', 'stage': 'Idea', 'min_investment': 0, 'max_investment': 0}
 
-    tab1, tab2, tab3 = st.tabs(["🎯 Matchmaking", "📌 Shortlist & Interests", "⚙️ Preferences"])
+    tab1, tab2, tab3 = st.tabs(["Matchmaking", "Shortlist & Interests", "Preferences"])
     
     with tab3:
         st.subheader("Investment Preferences")
@@ -95,14 +95,14 @@ def show():
                         st.session_state['view_startup_id'] = m['id']
                         st.rerun()
                 with b2:
-                    if st.button("🌟 Mark Interested", key=f"int_{m['id']}"):
+                    if st.button("Mark Interested", key=f"int_{m['id']}"):
                         try:
                             execute_query("INSERT INTO interests (investor_id, startup_id) VALUES (?, ?)", (investor_id, m['id']), fetch="none")
                             st.success("Marked!")
                         except:
                             st.error("Already marked")
                 with b3:
-                    if st.button("📌 Add to Shortlist", key=f"short_{m['id']}", type="primary"):
+                    if st.button("Add to Shortlist", key=f"short_{m['id']}", type="primary"):
                         try:
                             execute_query("INSERT INTO shortlists (investor_id, startup_id) VALUES (?, ?)", (investor_id, m['id']), fetch="none")
                             st.success("Shortlisted!")
@@ -114,7 +114,7 @@ def show():
         
         colA, colB = st.columns(2)
         with colA:
-            st.write("#### 🌟 Interested In")
+            st.write("#### Interested In")
             inter = execute_query(
                 "SELECT s.id, s.name, s.industry, s.stage FROM interests i JOIN startups s ON i.startup_id = s.id WHERE i.investor_id = ?",
                 (investor_id,)
@@ -126,7 +126,7 @@ def show():
                 st.write("No interests yet.")
                 
         with colB:
-            st.write("#### 📌 Shortlisted")
+            st.write("#### Shortlisted")
             shortl = execute_query(
                 "SELECT s.id, s.name, s.industry, s.stage FROM shortlists sh JOIN startups s ON sh.startup_id = s.id WHERE sh.investor_id = ?",
                 (investor_id,)

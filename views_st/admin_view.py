@@ -6,7 +6,7 @@ def show():
     from auth import require_auth
     require_auth(['admin'])
     
-    st.title("👑 Admin Portal")
+    st.title("Admin Portal")
     st.write(f"Welcome back, **{st.session_state['user']['name']}**!")
     
     startups = execute_query("SELECT * FROM startups")
@@ -36,7 +36,7 @@ def show():
     
     st.divider()
     
-    tab1, tab2 = st.tabs(["🚀 Startup Management", "👥 User Management"])
+    tab1, tab2 = st.tabs(["Startup Management", "User Management"])
     
     with tab1:
         st.subheader("Portfolio Startups")
@@ -52,7 +52,7 @@ def show():
                 filtered_df = df
                 
             for _, s in filtered_df.iterrows():
-                alert_icon = "⚠️ (AT RISK)" if s['is_at_risk'] else "✅"
+                alert_icon = "[AT RISK]" if s['is_at_risk'] else "[OK]"
                 with st.expander(f"{alert_icon} {s['name']}  —  {s['stage']}  ({s['progress']}%)"):
                     st.write(f"**Industry:** {s['industry']}  |  **Funding Needed:** ₹{s['funding_needed']:,.2f}")
                     st.write(s['description'])
