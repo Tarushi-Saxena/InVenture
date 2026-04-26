@@ -100,18 +100,13 @@ if not st.session_state['logged_in']:
                     import bcrypt
                     from database import execute_query
                     hashed = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-                    try:
-                        execute_query(
-                            "INSERT INTO users (name, email, password, role) VALUES (%s, %s, %s, %s)",
-                            (new_name, new_email, hashed, new_role),
-                            fetch="none"
-                        )
+                    res = execute_query(
+                        "INSERT INTO users (name, email, password, role) VALUES (%s, %s, %s, %s)",
+                        (new_name, new_email, hashed, new_role),
+                        fetch="none"
+                    )
+                    if res is not None:
                         st.success("Account created successfully! You can now log in.")
-                    except Exception as e:
-                        if "UNIQUE constraint failed" in str(e) or "Duplicate entry" in str(e):
-                            st.error("Email is already registered.")
-                        else:
-                            st.error(f"Error creating account.")
 else:
     # Sidebar
     with st.sidebar:

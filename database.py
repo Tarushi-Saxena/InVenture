@@ -13,16 +13,19 @@ def init_connection():
     target_db = DB_SOURCE
     
     try:
-        # Test if the directory is writable
-        test_file = ".test_write"
-        with open(test_file, "w") as f:
-            f.write("test")
-        os.remove(test_file)
-    except (IOError, PermissionError):
-        # We are in a read-only Docker container (Streamlit Cloud)
-        target_db = DB_TMP
-        if not os.path.exists(target_db):
-            shutil.copy(DB_SOURCE, target_db)
+        # Streamlit Cloud uses read-only Docker mounts. CREATE TABLE IF NOT EXISTS 
+        # doesn't acquire a write lock if it already exists, so we force an INSERT.
+        conn.execute("CREATE TABLE IF NOT EXISTS _test_lock_ (i INT)")
+        conn.execute("INSERT INTO _test_lock_ (i) VALUES (1)")
+        conn.commit()
+    except sqlite3.OperationalError as e:
+        if "readonly" in str(e).lower() or "locked" in str(e).lower():
+            # We are in a read-only container
+            conn.close()
+            target_db = DB_TMP
+            if not os.path.exists(target_db):
+                shutil.copy(DB_SOURCE, target_db)
+            conn = sqlite3.connect(target_db, check_same_thread=False)
             
     conn = sqlite3.connect(target_db, check_same_thread=False)
     conn.row_factory = sqlite3.Row
