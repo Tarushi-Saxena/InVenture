@@ -37,29 +37,35 @@ let mockDb = {
 };
 
 let useMock = false;
+let pool;
 
-// Create connection pool
-const pool = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'inventure_db',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-});
+if (process.env.VERCEL && !process.env.DB_HOST) {
+    console.warn('⚠️ Running on Vercel without DB_HOST. Bootstrapping project in fallback IN-MEMORY MOCK DB mode.');
+    useMock = true;
+} else {
+    // Create connection pool
+    pool = mysql.createPool({
+        host: process.env.DB_HOST || 'localhost',
+        user: process.env.DB_USER || 'root',
+        password: process.env.DB_PASSWORD || '',
+        database: process.env.DB_NAME || 'inventure_db',
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0
+    });
 
-// Check connection
-pool.getConnection((err, connection) => {
-    if (err) {
-        console.warn('⚠️ MySQL not detected. Bootstrapping project in fallback IN-MEMORY MOCK DB mode.');
-        console.warn('👉 Use this to test the site instantly. Run backend/schema.sql on local MySQL to switch back to SQL persistence.');
-        useMock = true;
-    } else {
-        console.log('✅ Connected to MySQL database successfully.');
-        connection.release();
-    }
-});
+    // Check connection
+    pool.getConnection((err, connection) => {
+        if (err) {
+            console.warn('⚠️ MySQL not detected. Bootstrapping project in fallback IN-MEMORY MOCK DB mode.');
+            console.warn('👉 Use this to test the site instantly. Run backend/schema.sql on local MySQL to switch back to SQL persistence.');
+            useMock = true;
+        } else {
+            console.log('✅ Connected to MySQL database successfully.');
+            connection.release();
+        }
+    });
+}
 
 // Mock Query Runner
 const mockQuery = async (sql, params = []) => {
