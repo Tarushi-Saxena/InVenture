@@ -500,6 +500,11 @@ app.post('/api/admin/users', authenticateToken, async (req, res) => {
 });
 
 // Start Express Server
-app.listen(PORT, () => {
-    console.log(`🚀 InVenture Banking API running on port ${PORT}`);
-});
+if (require.main === module || !process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`🚀 InVenture Banking API running on port ${PORT}`);
+    });
+}
+
+module.exports = app;
+
